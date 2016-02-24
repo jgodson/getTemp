@@ -4,6 +4,7 @@
   "description": "Gets temp info and stores in it a google spreadsheet",
   "main": "getTemp.js",
   "scripts": {
+	"start": "getTemp.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jason Godson",
