@@ -18,6 +18,7 @@ function insertIntoSpreadsheet(data, callback) {
 		// Insert data into spreadsheet
 		spreadsheet.addRow(1, data, function(error) {
 			if (error) {callback(error);}
+			// Callback wiht no errors
 			callback(null);
 		});
 	});
@@ -27,10 +28,11 @@ function getOpenWeatherData(callback) {
 	// Get temp data from openweathermap
 	request(openWeatherURL, function (error, response, body) {
 		if (error) throw error;
+		// Make sure request was successful before doing anything
 		if (response.statusCode == 200) {
 			// Convert JSON into something we can use
 			body = JSON.parse(body);
-			// Send temp to callback function
+			// Callback with temp data
 			callback(null, body.main.temp);
 		}
 		else {
@@ -43,6 +45,7 @@ function getOpenWeatherData(callback) {
 function getDiscoverEstevanData(callback) {
 	request(discoverEstevanURL, function(error, response, body) {
 		if (error) throw error;
+		// Make sure request was successful before doing anything
 		if (response.statusCode == 200) {
 			// Extract the temperature from html
 			var n = body.search('"temperature"');
@@ -51,9 +54,11 @@ function getDiscoverEstevanData(callback) {
 			result = result[0].trim();
 			// Check to make sure it is what we wanted
 			if (result.search('[a-z]') === -1) {
+				// Callback with resulting temperature
 				callback(null, result);
 			}
 			else {
+				// Callback with error
 				callback("Result not a number");
 			}
 		}
@@ -82,7 +87,7 @@ function getTime(callback) {
 	dateObj.setTime( dateObj.getTime() + -6 * 60 * 60 * 1000);
 	
 	// Change our dateObj into something we can put in the spreadsheet
-	var date = (dateObj.getMonth() + 1) + "/" + dateObj.getDate() + "/" + dateObj.getFullYear() + " ";
+	var date = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate() + " ";
 	var time = dateObj.getHours() >= 10 ? dateObj.getHours() : "0" + dateObj.getHours();
 	time += ":";
 	time += dateObj.getMinutes() >= 10 ? dateObj.getMinutes() : "0" + dateObj.getMinutes();
